@@ -24,22 +24,6 @@ A aplicação **Biblioteca Saire** é um sistema para gerenciamento de livros e 
 
 ---
 
-## Estrutura de Diretórios ##
-
-biblioteca-saire-exe/
-│
-├── node_modules/                # Dependências do projeto
-├── lista/                        # Pasta onde fica o arquivo de livros (livros.xlsx)
-├── views/                        # Contém os arquivos HTML usados para a interface gráfica
-│   ├── cadastro.html             # Tela de cadastro de livros
-│   ├── lista.html                # Tela de visualização de livros
-│   ├── livroform.html            # Formulário para adicionar um novo livro
-│   └── index.html                # Tela inicial
-├── styles/                       # Estilos CSS usados nas views
-├── package.json                  # Arquivo de configuração do Node.js
-├── package-lock.json             # Arquivo de dependências exato
-└── README.md                     # Este arquivo
-
 ## Fluxo da Aplicação ##
 - Tela Inicial: Ao abrir o aplicativo, o usuário é apresentado à tela inicial, onde pode navegar para a tela de cadastro de livros, a lista de livros ou voltar para o menu principal.
 - Cadastro de Livros: Na tela de cadastro, o usuário pode inserir o título, autor, quantidade e ano de publicação de um novo livro. Após o envio, o livro será registrado no arquivo livros.xlsx.
