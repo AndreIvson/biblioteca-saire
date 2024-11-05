@@ -1,0 +1,16 @@
+{
+    "name": "biblioteca-app",
+    "version": "1.0.0",
+    "main": "src/main.js",
+    "scripts": {
+        "start": "electron .",
+        "dev": "nodemon src/main.js"
+    },
+    "devDependencies": {
+        "electron": "^21.0.0",
+        "nodemon": "^3.0.0"
+    },
+    "dependencies": {
+        "xlsx": "^0.18.5"
+    }
+}

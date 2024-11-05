@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Usuários</title>
+  <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+  <h2>Lista de Usuários</h2>
+  <ul id="listaUsuarios"></ul>
+</body>
+<script src="../db.js"></script>
+<script>
+  listarUsuarios((usuarios) => {
+    const lista = document.getElementById('listaUsuarios');
+    usuarios.forEach((usuario) => {
+      const li = document.createElement('li');
+      li.textContent = `ID: ${usuario.id}, Nome: ${usuario.nome}, Email: ${usuario.email}`;
+      lista.appendChild(li);
+    });
+  });
+</script>
+</html>
