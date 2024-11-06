@@ -1,6 +1,7 @@
 # Biblioteca Saire
 
-A aplicação **Biblioteca Saire** é um sistema para gerenciamento de livros e empréstimos em uma biblioteca. Ela permite o cadastro de novos livros, visualização de livros registrados e gerenciamento de empréstimos, tudo de maneira prática e eficiente. O sistema foi desenvolvido utilizando o framework **Electron** para criar uma interface de desktop e **Node.js** para gerenciar a lógica de backend.
+A aplicação **Biblioteca Saire** é um sistema para gerenciamento de livros e empréstimos na biblioteca municipal de Sairé -
+PE, cidade onde eu resido. O sistema permite o cadastro , visualização e gerenciamento de Leitores, livros e empréstimos, tudo de maneira prática e eficiente. O sistema foi desenvolvido utilizando o framework **Electron** para criar uma interface de desktop e **Node.js** para gerenciar a lógica de backend.
 
 ---
 
