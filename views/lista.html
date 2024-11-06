@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Lista de Usuários</title>
-  <link rel="stylesheet" href="../styles/style.css">
+  <link rel="stylesheet" href="../src/styles/styles.css">
 </head>
 <body>
   <h2>Lista de Usuários</h2>
   <ul id="listaUsuarios"></ul>
+  <button id="go-back" class="go-back">Voltar</button>
 </body>
-<script src="../db.js"></script>
+<script src="../database/database.js"></script>
+<script src="../src/renderer.js"></script>
 <script>
   listarUsuarios((usuarios) => {
     const lista = document.getElementById('listaUsuarios');

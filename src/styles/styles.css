@@ -61,6 +61,25 @@ button:hover {
   background-color: #0056b3;
 }
 
+.go-back {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin: 20px auto;
+  padding: 12px;
+  background-color: #3498db;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.go-back:hover {
+  background-color: #2980b9;
+}
+
 @media (max-width: 500px) {
   form {
     width: 90%;

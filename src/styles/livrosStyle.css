@@ -50,7 +50,7 @@ h1 {
 }
 
 /* Estilo para o botão de voltar */
-.btn-voltar {
+.go-back {
     display: block;
     width: 100%;
     max-width: 200px;
@@ -65,7 +65,7 @@ h1 {
     transition: background-color 0.3s;
   }
   
-  .btn-voltar:hover {
+  .go-back:hover {
     background-color: #2980b9;
   }
 

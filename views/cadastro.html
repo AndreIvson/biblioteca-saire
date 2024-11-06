@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Cadastro de Usuário</title>
-  <link rel="stylesheet" href="../styles/styles.css">
+  <link rel="stylesheet" href="../src/styles/styles.css">
 </head>
 <body>
   <h2>Cadastro de Usuário</h2>
@@ -20,7 +20,10 @@
     <button type="submit">Salvar</button>
   </form>
 
-  <script src="../../database/database.js"></script>
+  <button id="go-back" class="go-back">Voltar</button>
+
+  <script src="../database/database.js"></script>
+  <script src="../src/renderer.js"></script>
   <script>
     document.getElementById('formCadastro').addEventListener('submit', function(event) {
       event.preventDefault();
