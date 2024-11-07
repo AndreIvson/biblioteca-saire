@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 let books = []; // Armazenar os livros lidos do Excel
-const itemsPerPage = 20;  // Limita a quantidade de livros por página
+const itemsPerPage = 12;  // Limita a quantidade de livros por página
 let currentPage = 1;      // Página atual
 let totalPages = 0;       // Total de páginas
 const maxPagesToShow = 10; // Quantidade de páginas visíveis por vez
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('go-back')?.addEventListener('click', () => {
     ipcRenderer.send('navigate', 'index.html');
-  }) 
+  })
 
   // Ao carregar os livros
   const loadBooksButton = document.getElementById('loadBooks');
@@ -67,6 +67,24 @@ function loadBooksFromFile() {
   }
 }
 
+// Função para converter data no formato de série numérica do Excel para DD/MM/AAAA
+function excelDateToJSDate(excelDate) {
+  // A data de base para o Excel é 1 de janeiro de 1900
+  const baseDate = new Date(1899, 11, 31); // 30 de dezembro de 1899 é o ponto inicial correto
+
+  // Adiciona o número de dias do Excel à data base
+  const jsDate = new Date(baseDate.getTime() + excelDate * 24 * 60 * 60 * 1000);
+  
+  const day = String(jsDate.getDate()).padStart(2, '0');
+  const month = String(jsDate.getMonth() + 1).padStart(2, '0');
+  const year = jsDate.getFullYear();
+  
+  return `${day}/${month}/${year}`;
+}
+
+
+const valorOuVazio = (valor) => valor == null ? '' : valor;
+
 // Função para exibir os livros com base na página atual
 function displayBooks(page) {
   const startIndex = (page - 1) * itemsPerPage;
@@ -80,10 +98,16 @@ function displayBooks(page) {
     const bookItem = document.createElement('div');
     bookItem.classList.add('book-item');
     bookItem.innerHTML = `
-      <span class="book-title">Título: ${book.Titulo}</span><br>
-      <span class="book-author">Autor: ${book.Autor}</span><br>
-      <span class="book-quantity">Quantidade: ${book.Quantidade}</span><br>
-      <span class="book-year">Ano: ${book.Ano}</span>
+      <span class="book-data">Data: ${valorOuVazio(isNaN(book.Data) ? book.Data : excelDateToJSDate(book.Data))}</span><br>
+      <span class="book-id">Id: ${valorOuVazio(book.id)}</span><br>
+      <span class="book-autor">Autor: ${valorOuVazio(book.Autor)}</span><br>
+      <span class="book-titulo">Titulo: ${valorOuVazio(book.Titulo)}</span><br>
+      <span class="book-volume">Volume: ${valorOuVazio(book.Volume)}</span><br>
+      <span class="book-editora">Editora: ${valorOuVazio(book.Editora)}</span><br>
+      <span class="book-local">Local: ${valorOuVazio(book.Local)}</span><br>
+      <span class="book-ano">Ano: ${valorOuVazio(book.Ano)}</span><br>
+      <span class="book-origem">Origem: ${valorOuVazio(book.Origem)}</span><br>
+      <span class="book-obs">Obs: ${valorOuVazio(book.Obs)}</span>
     `;
     bookListElement.appendChild(bookItem);
   });
@@ -93,21 +117,33 @@ function displayBooks(page) {
 
 // Função para adicionar o novo livro ao arquivo Excel
 document.getElementById('saveBookButton')?.addEventListener('click', () => {
-  const title = document.getElementById('bookTitle').value;
-  const author = document.getElementById('bookAuthor').value;
-  const quantity = document.getElementById('bookQuantity').value;
-  const year = document.getElementById('bookYear').value;
+  const data = document.getElementById('bookData').value || '';
+  const id = document.getElementById('bookId').value || '';
+  const autor = document.getElementById('bookAutor').value || '';
+  const titulo = document.getElementById('bookTitulo').value || '';
+  const volume = document.getElementById('bookVolume').value || '';
+  const editora = document.getElementById('bookEditora').value || '';
+  const local = document.getElementById('bookLocal').value || '';
+  const ano = document.getElementById('bookAno').value || '';
+  const origem = document.getElementById('bookOrigem').value || '';
+  const obs = document.getElementById('bookObs').value || '';
 
-  if (!title || !author || !quantity || !year) {
-    alert('Todos os campos são obrigatórios!');
+  if (!data || !id || !autor || !titulo || !volume || !editora || !local || !ano || !origem) {
+    alert('Todos os campos obrigatórios devem ser preenchidos!');
     return;
   }
 
   const newBook = {
-    Titulo: title,
-    Autor: author,
-    Quantidade: quantity,
-    Ano: year
+    Data: data,
+    id: id,
+    Autor: autor,
+    Titulo: titulo,
+    Volume: volume,
+    Editora: editora,
+    Local: local,
+    Ano: ano,
+    Origem: origem,
+    Obs: obs
   };
 
   // Envia os dados do novo livro para o main process salvar no arquivo Excel
