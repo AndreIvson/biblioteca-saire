@@ -9,17 +9,58 @@
   <h2>Lista de Usuários</h2>
   <ul id="listaUsuarios"></ul>
   <button id="go-back" class="go-back">Voltar</button>
-</body>
-<script src="../database/database.js"></script>
-<script src="../src/renderer.js"></script>
-<script>
-  listarUsuarios((usuarios) => {
-    const lista = document.getElementById('listaUsuarios');
-    usuarios.forEach((usuario) => {
-      const li = document.createElement('li');
-      li.textContent = `ID: ${usuario.id}, Nome: ${usuario.nome}, Email: ${usuario.email}`;
-      lista.appendChild(li);
+
+  <!-- Modal para exibir detalhes do usuário -->
+  <div id="userDetailsModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <h3>Detalhes do Usuário</h3>
+      <p id="userDetails"></p>
+    </div>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+
+    // Função para listar os usuários
+    function listarUsuarios(callback) {
+      ipcRenderer.invoke('listar-usuarios').then(callback).catch(console.error);
+    }
+
+    // Chama a função listarUsuarios e exibe os usuários na lista
+    listarUsuarios((usuarios) => {
+      const lista = document.getElementById('listaUsuarios');
+      usuarios.forEach((usuario) => {
+        const li = document.createElement('li');
+        li.textContent = `ID: ${usuario.id}, Nome: ${usuario.fullName}, Email: ${usuario.emailAddress}`;
+        li.addEventListener('click', () => mostrarDetalhesUsuario(usuario.id));
+        lista.appendChild(li);
+      });
     });
-  });
-</script>
+
+    // Função para mostrar detalhes do usuário em um modal
+    function mostrarDetalhesUsuario(id) {
+      ipcRenderer.invoke('obter-detalhes-usuario', id).then((usuario) => {
+        const detalhes = `
+          <strong>Nome:</strong> ${usuario.fullName}<br>
+          <strong>Email:</strong> ${usuario.emailAddress}<br>
+          <strong>Telefone:</strong> ${usuario.phoneNumber}<br>
+          <strong>Foto de Perfil:</strong> ${usuario.profilePic}<br>
+          <strong>Escola:</strong> ${usuario.school}<br>
+          <strong>Endereço:</strong> ${usuario.address}<br>
+          <strong>Nome do Livro:</strong> ${usuario.bookName}<br>
+          <strong>Data de Empréstimo:</strong> ${usuario.loanBookDate}<br>
+          <strong>Data de Devolução:</strong> ${usuario.returnBookDate}<br>
+        `;
+        document.getElementById('userDetails').innerHTML = detalhes;
+        document.getElementById('userDetailsModal').style.display = 'block';
+      }).catch(console.error);
+    }
+
+    // Fecha o modal de detalhes do usuário
+    document.getElementById('closeModal').addEventListener('click', () => {
+      document.getElementById('userDetailsModal').style.display = 'none';
+    });
+  </script>
+</body>
 </html>

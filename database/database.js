@@ -53,8 +53,30 @@ function excluirUsuario(id) {
   });
 }
 
+// Função para listar todos os usuários
+function listarUsuarios() {
+  return new Promise((resolve, reject) => {
+    db.all(`SELECT id, fullName, emailAddress FROM fichas`, (err, rows) => {
+      if (err) reject(err);
+      else resolve(rows);
+    });
+  });
+}
+
+// Função para obter detalhes de um usuário específico
+function obterDetalhesUsuario(id) {
+  return new Promise((resolve, reject) => {
+    db.get(`SELECT * FROM fichas WHERE id = ?`, [id], (err, row) => {
+      if (err) reject(err);
+      else resolve(row);
+    });
+  });
+}
+
 module.exports = {
   adicionarUsuario,
   editarUsuario,
   excluirUsuario,
+  listarUsuarios,
+  obterDetalhesUsuario,
 };

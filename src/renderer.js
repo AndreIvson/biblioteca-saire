@@ -36,6 +36,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+listarUsuarios((usuarios) => {
+  const lista = document.getElementById('listaUsuarios');
+  lista.innerHTML = ''; // Limpa a lista antes de adicionar os itens
+
+  usuarios.forEach((usuario) => {
+    const li = document.createElement('li');
+    li.textContent = `ID: ${usuario.id}, Nome: ${usuario.fullName}, Email: ${usuario.emailAddress}`;
+    
+    // Adiciona o evento de clique para abrir o modal com os detalhes
+    li.addEventListener('click', () => mostrarDetalhesUsuario(usuario.id));
+    lista.appendChild(li);
+  });
+});
+
 // Função para carregar e ler o arquivo Excel da pasta 'lista'
 function loadBooksFromFile() {
   const booksDir = path.join(__dirname, '..', 'lista');  // Caminho da pasta 'lista'
@@ -114,41 +128,6 @@ function displayBooks(page) {
 
   updatePagination();  // Atualiza os botões de navegação
 }
-
-// Função para adicionar o novo livro ao arquivo Excel
-document.getElementById('saveBookButton')?.addEventListener('click', () => {
-  const data = document.getElementById('bookData').value || '';
-  const id = document.getElementById('bookId').value || '';
-  const autor = document.getElementById('bookAutor').value || '';
-  const titulo = document.getElementById('bookTitulo').value || '';
-  const volume = document.getElementById('bookVolume').value || '';
-  const editora = document.getElementById('bookEditora').value || '';
-  const local = document.getElementById('bookLocal').value || '';
-  const ano = document.getElementById('bookAno').value || '';
-  const origem = document.getElementById('bookOrigem').value || '';
-  const obs = document.getElementById('bookObs').value || '';
-
-  if (!data || !id || !autor || !titulo || !volume || !editora || !local || !ano || !origem) {
-    alert('Todos os campos obrigatórios devem ser preenchidos!');
-    return;
-  }
-
-  const newBook = {
-    Data: data,
-    id: id,
-    Autor: autor,
-    Titulo: titulo,
-    Volume: volume,
-    Editora: editora,
-    Local: local,
-    Ano: ano,
-    Origem: origem,
-    Obs: obs
-  };
-
-  // Envia os dados do novo livro para o main process salvar no arquivo Excel
-  ipcRenderer.invoke('save-book', newBook);
-});
 
 // Função para atualizar a navegação de páginas
 function updatePagination() {

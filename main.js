@@ -1,8 +1,6 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
-const xlsx = require('xlsx');
-const fs = require('fs');
-const db = require('./database/database.js')
+const { adicionarUsuario, listarUsuarios, obterDetalhesUsuario } = require('./database/database');
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -25,35 +23,34 @@ ipcMain.on('navigate', (event, page) => {
   event.sender.loadFile(filePath);
 });
 
-// Adicionar novo livro ao arquivo Excel
-ipcMain.handle('save-book', async (event, newBook) => {
+ipcMain.on('adicionar-usuario', async (event, dados) => {
   try {
-    const booksDir = path.join(__dirname, 'lista');
-    const filePath = path.join(booksDir, 'livros.xlsx');
-
-    // Verificar se o arquivo existe
-    if (!fs.existsSync(filePath)) {
-      alert('Arquivo de livros não encontrado!');
-      return;
-    }
-
-    const workbook = xlsx.readFile(filePath);
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-    const sheetData = xlsx.utils.sheet_to_json(sheet);
-
-    // Adiciona o novo livro
-    sheetData.push(newBook);
-
-    // Atualiza o arquivo
-    const updatedSheet = xlsx.utils.json_to_sheet(sheetData);
-    workbook.Sheets[sheetName] = updatedSheet;
-    xlsx.writeFile(workbook, filePath);
-
-    alert('Livro adicionado com sucesso!');
+    const resultado = await adicionarUsuario(dados);
+    event.reply('adicionar-usuario-resposta', { sucesso: true, id: resultado.id });
   } catch (error) {
-    console.error('Erro ao salvar o livro:', error);
-    alert('Erro ao salvar o livro. Tente novamente.');
+    event.reply('adicionar-usuario-resposta', { sucesso: false, erro: error.message });
+  }
+});
+
+// IPC para listar usuários
+ipcMain.handle('listar-usuarios', async () => {
+  try {
+    const usuarios = await listarUsuarios();
+    return usuarios;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+});
+
+// IPC para obter detalhes do usuário
+ipcMain.handle('obter-detalhes-usuario', async (event, id) => {
+  try {
+    const usuario = await obterDetalhesUsuario(id);
+    return usuario;
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 });
 

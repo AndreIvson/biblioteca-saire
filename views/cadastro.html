@@ -22,24 +22,35 @@
 
   <button id="go-back" class="go-back">Voltar</button>
 
-  <script src="../database/database.js"></script>
-  <script src="../src/renderer.js"></script>
   <script>
+    const { ipcRenderer } = require('electron');
+
+    // Função para enviar o formulário para adicionar um usuário
     document.getElementById('formCadastro').addEventListener('submit', function(event) {
       event.preventDefault();
+      
       const dados = {
-        nome: document.getElementById('nome').value,
-        email: document.getElementById('email').value,
-        telefone: document.getElementById('telefone').value,
-        fotoPerfil: document.getElementById('fotoPerfil').value,
-        escola: document.getElementById('escola').value,
-        endereco: document.getElementById('endereco').value,
-        nomeLivro: document.getElementById('nomeLivro').value,
-        dataEmprestimo: document.getElementById('dataEmprestimo').value,
-        dataDevolucao: document.getElementById('dataDevolucao').value
+        fullName: document.getElementById('nome').value,
+        emailAddress: document.getElementById('email').value,
+        phoneNumber: document.getElementById('telefone').value,
+        profilePic: document.getElementById('fotoPerfil').value,
+        school: document.getElementById('escola').value,
+        address: document.getElementById('endereco').value,
+        bookName: document.getElementById('nomeLivro').value,
+        loanBookDate: document.getElementById('dataEmprestimo').value,
+        returnBookDate: document.getElementById('dataDevolucao').value
       };
-      adicionarUsuario(dados);
-      alert("Usuário cadastrado com sucesso!");
+
+      ipcRenderer.send('adicionar-usuario', dados);
+    });
+
+    // Recebe a resposta de sucesso ou erro do processo principal
+    ipcRenderer.on('adicionar-usuario-resposta', (event, resposta) => {
+      if (resposta.sucesso) {
+        alert("Usuário cadastrado com sucesso!");
+      } else {
+        alert("Erro ao cadastrar usuário: " + resposta.erro);
+      }
     });
   </script>
 </body>

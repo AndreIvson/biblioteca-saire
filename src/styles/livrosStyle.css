@@ -1,11 +1,9 @@
-/* Reset básico */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Estilo global */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f7fc;
@@ -25,7 +23,6 @@ h1 {
     margin: 0 auto;
 }
 
-/* Estilos do botão de carregar livros */
 .btn-load {
     display: block;
     width: 100%;
@@ -49,7 +46,6 @@ h1 {
     outline: none;
 }
 
-/* Estilo para o botão de voltar */
 .go-back {
     display: block;
     width: 100%;
@@ -69,7 +65,6 @@ h1 {
     background-color: #2980b9;
   }
 
-/* Lista de livros */
 .book-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -109,7 +104,6 @@ h1 {
     color: #7f8c8d;
 }
 
-/* Estilos de paginação */
 .pagination {
     text-align: center;
     margin-top: 20px;
