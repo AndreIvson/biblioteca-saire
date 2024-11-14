@@ -16,6 +16,7 @@ function createWindow() {
 
   win.setMenu(null); // Desativa o menu padrão do Electron
   win.loadFile(path.join(__dirname, 'views', 'index.html')); // Carrega a página inicial
+  win.webContents.openDevTools();
 }
 
 // Navegar entre páginas
@@ -24,39 +25,23 @@ ipcMain.on('navigate', (event, page) => {
   event.sender.loadFile(filePath);
 });
 
-ipcMain.on('adicionar-usuario', async (event, dados) => {
-  try {
-    const resultado = await adicionarUsuario(dados);
-    event.reply('adicionar-usuario-resposta', { sucesso: true, id: resultado.id });
-  } catch (error) {
-    event.reply('adicionar-usuario-resposta', { sucesso: false, erro: error.message });
-  }
-});
-
-// Escutando a requisição do front-end
+// IPC para adicionar usuário com verificação de imagem
 ipcMain.handle('adicionar-usuario', async (event, dados) => {
   try {
-    // Verifica e salva a foto do perfil, se necessário
     if (dados.profilePic) {
-      // Use o valor de fullName para nomear a foto
-      const safeName = dados.fullName.replace(/[^a-zA-Z0-9]/g, '_'); // Substitui caracteres especiais por _ para evitar problemas
+      const safeName = dados.fullName.replace(/[^a-zA-Z0-9]/g, '_');
       const imagePath = path.join(__dirname, 'fotos_perfil', `${safeName}.png`);
       const base64Data = dados.profilePic.replace(/^data:image\/png;base64,/, "");
 
-      // Cria a pasta se não existir
       if (!fs.existsSync(path.join(__dirname, 'fotos_perfil'))) {
         fs.mkdirSync(path.join(__dirname, 'fotos_perfil'));
       }
 
-      // Salva a foto com o nome do usuário
       fs.writeFileSync(imagePath, base64Data, 'base64');
-      dados.profilePic = imagePath; // Atualiza o caminho da foto com o nome do fullName
+      dados.profilePic = imagePath;
     }
 
-    // Adiciona o usuário ao banco de dados
     const usuarioAdicionado = await adicionarUsuario(dados);
-
-    // Envia a resposta para o front-end
     return { sucesso: true, usuario: usuarioAdicionado };
   } catch (error) {
     console.error('Erro ao adicionar usuário:', error);
@@ -67,8 +52,7 @@ ipcMain.handle('adicionar-usuario', async (event, dados) => {
 // IPC para listar usuários
 ipcMain.handle('listar-usuarios', async () => {
   try {
-    const usuarios = await listarUsuarios();
-    return usuarios;
+    return await listarUsuarios();
   } catch (error) {
     console.error(error);
     return [];
@@ -78,11 +62,21 @@ ipcMain.handle('listar-usuarios', async () => {
 // IPC para obter detalhes do usuário
 ipcMain.handle('obter-detalhes-usuario', async (event, id) => {
   try {
-    const usuario = await obterDetalhesUsuario(id);
-    return usuario;
+    return await obterDetalhesUsuario(id);
   } catch (error) {
     console.error(error);
     return null;
+  }
+});
+
+// Listar livros
+ipcMain.handle('listar-livros', async () => {
+  try {
+    const livros = await listarLivros(); // Função para listar livros do banco
+    return livros;
+  } catch (error) {
+    console.error('Erro ao listar livros:', error);
+    return [];
   }
 });
 
@@ -93,5 +87,4 @@ app.on('window-all-closed', () => {
   }
 });
 
-// Criar a janela principal
 app.whenReady().then(createWindow);

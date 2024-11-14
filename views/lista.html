@@ -13,11 +13,14 @@
   <button onclick="history.back()" class="go-back">Voltar</button>
 
   <!-- Modal para exibir detalhes do usuário -->
-  <div id="userDetailsModal" class="modal" style="display: none;">
-    <div class="modal-content">
-      <span id="closeModal" class="close">&times;</span>
-      <h3>Detalhes do Usuário</h3>
-      <div id="userDetails"></div> <!-- Aqui vamos adicionar os detalhes, incluindo a foto -->
+  
+  <div id="modalcenter">
+    <div id="userDetailsModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <span id="closeModal" class="close">&times;</span>
+        <h3>Detalhes do Usuário</h3>
+        <div id="userDetails"></div> <!-- Aqui vamos adicionar os detalhes, incluindo a foto -->
+      </div>
     </div>
   </div>
 
@@ -44,7 +47,7 @@
     function mostrarDetalhesUsuario(id) {
       ipcRenderer.invoke('obter-detalhes-usuario', id).then((usuario) => {
         const detalhes = `
-          <img src="${usuario.profilePic}" alt="Foto de Perfil" width="150" height="150"><br>
+          <img src="${usuario.profilePic}" class="user-photo" alt="Foto de Perfil"><br>
           <strong>Nome:</strong> ${usuario.fullName}<br>
           <strong>Email:</strong> ${usuario.emailAddress}<br>
           <strong>Telefone:</strong> ${usuario.phoneNumber}<br>
