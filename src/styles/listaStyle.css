@@ -1,0 +1,121 @@
+/* Estilos gerais */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  /* Título */
+  h2 {
+    color: #333;
+    text-align: center;
+  }
+  
+  /* Lista de usuários */
+  #listaUsuarios {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 auto;
+    width: 80%;
+  }
+  
+  #listaUsuarios li {
+    background-color: #ffffff;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  #listaUsuarios li:hover {
+    background-color: #e0e0e0;
+  }
+  
+  /* Botão "Voltar" */
+  #go-back {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+  }
+  
+  #go-back:hover {
+    background-color: #555;
+  }
+  
+  /* Estilos do modal */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  /* Estilo de carteira de identificação */
+  .modal-content h3 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  #userDetails {
+    text-align: left;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+  
+  #userDetails strong {
+    color: #555;
+  }
+  
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .close:hover {
+    color: #555;
+  }
+
+  .go-back {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    margin: 20px auto;
+    padding: 12px;
+    background-color: #3498db;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  

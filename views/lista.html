@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <title>Lista de Usuários</title>
-  <link rel="stylesheet" href="../src/styles/styles.css">
+  <link rel="stylesheet" href="../src/styles/listaStyle.css">
 </head>
+
 <body>
   <h2>Lista de Usuários</h2>
   <ul id="listaUsuarios"></ul>
-  <button id="go-back" class="go-back">Voltar</button>
+  <button onclick="history.back()" class="go-back">Voltar</button>
 
   <!-- Modal para exibir detalhes do usuário -->
   <div id="userDetailsModal" class="modal" style="display: none;">
     <div class="modal-content">
       <span id="closeModal" class="close">&times;</span>
       <h3>Detalhes do Usuário</h3>
-      <p id="userDetails"></p>
+      <div id="userDetails"></div> <!-- Aqui vamos adicionar os detalhes, incluindo a foto -->
     </div>
   </div>
 
@@ -42,10 +44,10 @@
     function mostrarDetalhesUsuario(id) {
       ipcRenderer.invoke('obter-detalhes-usuario', id).then((usuario) => {
         const detalhes = `
+          <img src="${usuario.profilePic}" alt="Foto de Perfil" width="150" height="150"><br>
           <strong>Nome:</strong> ${usuario.fullName}<br>
           <strong>Email:</strong> ${usuario.emailAddress}<br>
           <strong>Telefone:</strong> ${usuario.phoneNumber}<br>
-          <strong>Foto de Perfil:</strong> ${usuario.profilePic}<br>
           <strong>Escola:</strong> ${usuario.school}<br>
           <strong>Endereço:</strong> ${usuario.address}<br>
           <strong>Nome do Livro:</strong> ${usuario.bookName}<br>
@@ -63,4 +65,5 @@
     });
   </script>
 </body>
+
 </html>

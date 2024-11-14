@@ -23,9 +23,29 @@ document.addEventListener('DOMContentLoaded', () => {
     ipcRenderer.send('navigate', 'livros.html');  // Navega para a lista de livros
   });
 
-  document.getElementById('go-back')?.addEventListener('click', () => {
-    ipcRenderer.send('navigate', 'index.html');
-  })
+  // Salva o usuário e a imagem em uma pasta local
+ipcMain.handle('adicionar-usuario', async (event, dados) => {
+  try {
+    const imagePath = path.join(__dirname, 'fotos_perfil', `${dados.id}.png`);
+    const base64Data = dados.profilePic.replace(/^data:image\/png;base64,/, "");
+    
+    // Cria a pasta de fotos de perfil, se não existir
+    if (!fs.existsSync(path.join(__dirname, 'fotos_perfil'))) {
+      fs.mkdirSync(path.join(__dirname, 'fotos_perfil'));
+    }
+
+    // Salva a imagem como arquivo
+    fs.writeFileSync(imagePath, base64Data, 'base64');
+
+    // Salva o usuário no banco de dados (ou outra operação desejada)
+    // Aqui, substitua pelo código para salvar o usuário com `imagePath` como o caminho da foto
+
+    return { sucesso: true };
+  } catch (error) {
+    console.error("Erro ao salvar usuário:", error);
+    return { sucesso: false, erro: error.message };
+  }
+});
 
   // Ao carregar os livros
   const loadBooksButton = document.getElementById('loadBooks');

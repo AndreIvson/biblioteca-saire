@@ -13,6 +13,7 @@
     "dependencies": {
         "sqlite3": "^5.1.7",
         "uuid": "^11.0.2",
+        "webcam-easy": "^1.1.1",
         "xlsx": "^0.18.5"
     }
 }

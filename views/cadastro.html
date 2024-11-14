@@ -8,50 +8,33 @@
 <body>
   <h2>Cadastro de Usuário</h2>
   <form id="formCadastro">
+    <!-- Campos do formulário -->
     <label>Nome Completo: <input type="text" id="nome" required></label>
     <label>Email: <input type="email" id="email"></label>
     <label>Telefone: <input type="tel" id="telefone"></label>
-    <label>Foto de Perfil: <input type="text" id="fotoPerfil"></label>
+
+    <label>Foto de Perfil:</label>
+    <div id="cameraContainer" style="display: none;">
+      <video id="camera" autoplay playsinline></video>
+      <canvas id="canvas" style="display: none;"></canvas>
+    </div>
+    <button type="button" id="openCameraButton">Abrir Câmera</button>
+    <button type="button" id="captureButton" style="display: none;">Tirar Foto</button>
+    
+    <div id="photoPreview" style="display: none;">
+      <img id="capturedPhoto" src="" alt="Pré-visualização da foto">
+    </div>
+
     <label>Escola: <input type="text" id="escola"></label>
     <label>Endereço: <input type="text" id="endereco"></label>
     <label>Nome do Livro: <input type="text" id="nomeLivro"></label>
     <label>Data de Empréstimo: <input type="date" id="dataEmprestimo"></label>
     <label>Data de Devolução: <input type="date" id="dataDevolucao"></label>
+
     <button type="submit">Salvar</button>
   </form>
+  <button onclick="history.back()" class="go-back">Voltar</button>
 
-  <button id="go-back" class="go-back">Voltar</button>
-
-  <script>
-    const { ipcRenderer } = require('electron');
-
-    // Função para enviar o formulário para adicionar um usuário
-    document.getElementById('formCadastro').addEventListener('submit', function(event) {
-      event.preventDefault();
-      
-      const dados = {
-        fullName: document.getElementById('nome').value,
-        emailAddress: document.getElementById('email').value,
-        phoneNumber: document.getElementById('telefone').value,
-        profilePic: document.getElementById('fotoPerfil').value,
-        school: document.getElementById('escola').value,
-        address: document.getElementById('endereco').value,
-        bookName: document.getElementById('nomeLivro').value,
-        loanBookDate: document.getElementById('dataEmprestimo').value,
-        returnBookDate: document.getElementById('dataDevolucao').value
-      };
-
-      ipcRenderer.send('adicionar-usuario', dados);
-    });
-
-    // Recebe a resposta de sucesso ou erro do processo principal
-    ipcRenderer.on('adicionar-usuario-resposta', (event, resposta) => {
-      if (resposta.sucesso) {
-        alert("Usuário cadastrado com sucesso!");
-      } else {
-        alert("Erro ao cadastrar usuário: " + resposta.erro);
-      }
-    });
-  </script>
+  <script src="../src/cadastroScript.js"></script> <!-- Arquivo JavaScript separado -->
 </body>
 </html>
