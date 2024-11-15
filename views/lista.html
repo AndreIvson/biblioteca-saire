@@ -3,23 +3,27 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Lista de Usuários</title>
+  <title>Lista de Leitores</title>
   <link rel="stylesheet" href="../src/styles/listaStyle.css">
 </head>
 
 <body>
-  <h2>Lista de Usuários</h2>
+  <h2>Lista de Leitores</h2>
   <ul id="listaUsuarios"></ul>
   <button onclick="history.back()" class="go-back">Voltar</button>
 
   <!-- Modal para exibir detalhes do usuário -->
-  
+
   <div id="modalcenter">
-    <div id="userDetailsModal" class="modal" style="display: none;">
+    <!-- Overlay para o fundo escuro -->
+    <div id="modalOverlay" class="modal-overlay"></div>
+
+    <!-- Modal -->
+    <div id="userDetailsModal" class="modal">
       <div class="modal-content">
         <span id="closeModal" class="close">&times;</span>
-        <h3>Detalhes do Usuário</h3>
-        <div id="userDetails"></div> <!-- Aqui vamos adicionar os detalhes, incluindo a foto -->
+        <h3>Detalhes do Leitor</h3>
+        <div id="userDetails"></div>
       </div>
     </div>
   </div>
@@ -34,10 +38,11 @@
 
     // Chama a função listarUsuarios e exibe os usuários na lista
     listarUsuarios((usuarios) => {
+      usuarios.sort((a, b) => a.fullName.localeCompare(b.fullName));
       const lista = document.getElementById('listaUsuarios');
       usuarios.forEach((usuario) => {
         const li = document.createElement('li');
-        li.textContent = `ID: ${usuario.id}, Nome: ${usuario.fullName}, Email: ${usuario.emailAddress}`;
+        li.textContent = `Nome: ${usuario.fullName}, Email: ${usuario.emailAddress}`;
         li.addEventListener('click', () => mostrarDetalhesUsuario(usuario.id));
         lista.appendChild(li);
       });
@@ -47,24 +52,26 @@
     function mostrarDetalhesUsuario(id) {
       ipcRenderer.invoke('obter-detalhes-usuario', id).then((usuario) => {
         const detalhes = `
-          <img src="${usuario.profilePic}" class="user-photo" alt="Foto de Perfil"><br>
-          <strong>Nome:</strong> ${usuario.fullName}<br>
-          <strong>Email:</strong> ${usuario.emailAddress}<br>
-          <strong>Telefone:</strong> ${usuario.phoneNumber}<br>
-          <strong>Escola:</strong> ${usuario.school}<br>
-          <strong>Endereço:</strong> ${usuario.address}<br>
-          <strong>Nome do Livro:</strong> ${usuario.bookName}<br>
-          <strong>Data de Empréstimo:</strong> ${usuario.loanBookDate}<br>
-          <strong>Data de Devolução:</strong> ${usuario.returnBookDate}<br>
-        `;
+      <img src="${usuario.profilePic}" class="user-photo" alt="Foto de Perfil"><br>
+      <strong>Nome:</strong> ${usuario.fullName}<br>
+      <strong>Email:</strong> ${usuario.emailAddress}<br>
+      <strong>Telefone:</strong> ${usuario.phoneNumber}<br>
+      <strong>Escola:</strong> ${usuario.school}<br>
+      <strong>Endereço:</strong> ${usuario.address}<br>
+      <strong>Título do Livro:</strong> ${usuario.bookName}<br>
+      <strong>Data de Empréstimo:</strong> ${usuario.loanBookDate}<br>
+      <strong>Data de Devolução:</strong> ${usuario.returnBookDate}<br>
+    `;
         document.getElementById('userDetails').innerHTML = detalhes;
         document.getElementById('userDetailsModal').style.display = 'block';
+        document.getElementById('modalOverlay').style.display = 'block'; // Mostra o overlay
       }).catch(console.error);
     }
 
     // Fecha o modal de detalhes do usuário
     document.getElementById('closeModal').addEventListener('click', () => {
       document.getElementById('userDetailsModal').style.display = 'none';
+      document.getElementById('modalOverlay').style.display = 'none'; // Esconde o overlay
     });
   </script>
 </body>

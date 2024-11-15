@@ -29,19 +29,33 @@ ipcMain.on('navigate', (event, page) => {
 ipcMain.handle('adicionar-usuario', async (event, dados) => {
   try {
     if (dados.profilePic) {
+      // Formatar o nome do arquivo, adicionando o fullName e a data
       const safeName = dados.fullName.replace(/[^a-zA-Z0-9]/g, '_');
-      const imagePath = path.join(__dirname, 'fotos_perfil', `${safeName}.png`);
+      
+      // Pegar a data atual e formatá-la
+      const currentDate = new Date();
+      const formattedDate = currentDate.toISOString().replace(/[-T:.Z]/g, '').slice(0, 14); // Formato: YYYYMMDDHHMMSS
+
+      // Nome do arquivo com fullName + data
+      const imageName = `${safeName}-${formattedDate}.png`;
+
+      const imagePath = path.join(__dirname, 'fotos_perfil', imageName);
       const base64Data = dados.profilePic.replace(/^data:image\/png;base64,/, "");
 
+      // Verificar se o diretório existe e criar se necessário
       if (!fs.existsSync(path.join(__dirname, 'fotos_perfil'))) {
         fs.mkdirSync(path.join(__dirname, 'fotos_perfil'));
       }
 
+      // Salvar a imagem
       fs.writeFileSync(imagePath, base64Data, 'base64');
-      dados.profilePic = imagePath;
+      dados.profilePic = imagePath; // Atualizar o caminho da imagem no objeto de dados
     }
 
+    // Chamar a função para adicionar o usuário ao banco de dados ou outro processo
     const usuarioAdicionado = await adicionarUsuario(dados);
+
+    // Retornar o sucesso da operação
     return { sucesso: true, usuario: usuarioAdicionado };
   } catch (error) {
     console.error('Erro ao adicionar usuário:', error);

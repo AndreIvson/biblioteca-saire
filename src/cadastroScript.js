@@ -2,6 +2,29 @@ const { ipcRenderer } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
+document.addEventListener("DOMContentLoaded", function () {
+  const telefoneInput = document.getElementById("telefone");
+
+  telefoneInput.addEventListener("input", function (e) {
+    let telefone = e.target.value.replace(/\D/g, ""); // Remove todos os caracteres não numéricos
+
+    if (telefone.length > 11) telefone = telefone.slice(0, 11); // Limita o número a 11 dígitos
+
+    // Aplica a máscara de acordo com a quantidade de dígitos
+    if (telefone.length > 10) {
+      telefone = telefone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+    } else if (telefone.length > 6) {
+      telefone = telefone.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
+    } else if (telefone.length > 2) {
+      telefone = telefone.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
+    } else {
+      telefone = telefone.replace(/^(\d*)$/, "($1");
+    }
+
+    e.target.value = telefone; // Define o valor formatado
+  });
+});
+
 // Inicia a câmera ao clicar em "Abrir Câmera"
 document.getElementById('openCameraButton').addEventListener('click', () => {
   const video = document.getElementById('camera');
@@ -39,6 +62,7 @@ document.getElementById('captureButton').addEventListener('click', () => {
   document.getElementById('formCadastro').dataset.profilePic = dataUrl;
 });
 
+// Ouvinte para o envio do formulário
 document.getElementById('formCadastro').addEventListener('submit', function(event) {
   event.preventDefault();
   
@@ -60,6 +84,25 @@ document.getElementById('formCadastro').addEventListener('submit', function(even
     .then(response => {
       if (response.sucesso) {
         alert("Usuário cadastrado com sucesso!");
+
+        // Resetando o formulário e garantindo que os campos possam ser reutilizados
+        const form = document.getElementById('formCadastro');
+        form.reset();
+
+        // Limpa os campos de imagem
+        document.getElementById('photoPreview').style.display = 'none'; // Esconde a foto
+        document.getElementById('capturedPhoto').src = ''; // Limpa a imagem
+        form.dataset.profilePic = ''; // Limpa o campo de imagem
+
+        // Garantir que todos os campos de entrada voltem ao seu estado habilitado
+        form.querySelectorAll('input, textarea').forEach(input => {
+          input.disabled = false; // Garante que todos os campos estejam habilitados
+        });
+
+        // Focar o primeiro campo após o reset para melhorar a experiência
+        document.getElementById('nome').focus();
+        
+        return;
       } else {
         alert("Erro ao cadastrar usuário: " + response.erro);
       }
