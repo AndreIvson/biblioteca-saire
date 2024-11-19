@@ -120,6 +120,10 @@ function displayBooks(page) {
   updatePagination();
 }
 
+document.getElementById('open-file').addEventListener('click', () => {
+  ipcRenderer.send('abrir-livro');
+});
+
 function updatePagination() {
   const paginationElement = document.getElementById('pagination');
   paginationElement.innerHTML = '';

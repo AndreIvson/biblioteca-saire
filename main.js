@@ -1,3 +1,4 @@
+const { exec } = require('child_process'); 
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
@@ -103,6 +104,23 @@ ipcMain.handle('listar-livros', async () => {
   } catch (error) {
     console.error('Erro ao listar livros:', error);
     return [];
+  }
+});
+
+ipcMain.on('abrir-livro', () => {
+  const filePath = path.join(__dirname, 'lista', 'livros.xlsx');
+  
+  // Verifique se o arquivo existe antes de tentar abrir
+  if (fs.existsSync(filePath)) {
+    exec(`start ${filePath}`, (err, stdout, stderr) => {
+      if (err) {
+        console.error('Erro ao abrir o arquivo:', err);
+      } else {
+        console.log('Arquivo aberto com sucesso:', stdout);
+      }
+    });
+  } else {
+    console.error('Arquivo não encontrado:', filePath);
   }
 });
 
