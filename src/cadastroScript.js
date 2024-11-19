@@ -6,11 +6,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const telefoneInput = document.getElementById("telefone");
 
   telefoneInput.addEventListener("input", function (e) {
-    let telefone = e.target.value.replace(/\D/g, ""); // Remove todos os caracteres não numéricos
+    let telefone = e.target.value.replace(/\D/g, "");
 
-    if (telefone.length > 11) telefone = telefone.slice(0, 11); // Limita o número a 11 dígitos
+    if (telefone.length > 11) telefone = telefone.slice(0, 11);
 
-    // Aplica a máscara de acordo com a quantidade de dígitos
     if (telefone.length > 10) {
       telefone = telefone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
     } else if (telefone.length > 6) {
@@ -21,11 +20,10 @@ document.addEventListener("DOMContentLoaded", function () {
       telefone = telefone.replace(/^(\d*)$/, "($1");
     }
 
-    e.target.value = telefone; // Define o valor formatado
+    e.target.value = telefone;
   });
 });
 
-// Inicia a câmera ao clicar em "Abrir Câmera"
 document.getElementById('openCameraButton').addEventListener('click', () => {
   const video = document.getElementById('camera');
   navigator.mediaDevices.getUserMedia({ video: true })
@@ -38,7 +36,6 @@ document.getElementById('openCameraButton').addEventListener('click', () => {
     .catch(console.error);
 });
 
-// Captura a imagem ao clicar em "Tirar Foto"
 document.getElementById('captureButton').addEventListener('click', () => {
   const canvas = document.getElementById('canvas');
   const video = document.getElementById('camera');
@@ -46,32 +43,28 @@ document.getElementById('captureButton').addEventListener('click', () => {
   canvas.height = video.videoHeight;
   canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
-  const dataUrl = canvas.toDataURL('image/png'); // Imagem em base64
+  const dataUrl = canvas.toDataURL('image/png');
 
-  // Exibe a pré-visualização da foto capturada
   document.getElementById('photoPreview').style.display = 'block';
   document.getElementById('capturedPhoto').src = dataUrl;
 
-  // Interrompe a transmissão da câmera
   video.srcObject.getTracks().forEach(track => track.stop());
   document.getElementById('cameraContainer').style.display = 'none';
   document.getElementById('captureButton').style.display = 'none';
   document.getElementById('openCameraButton').style.display = 'inline';
 
-  // Salva a imagem base64 no dataset do formulário
   document.getElementById('formCadastro').dataset.profilePic = dataUrl;
 });
 
-// Ouvinte para o envio do formulário
 document.getElementById('formCadastro').addEventListener('submit', function (event) {
   event.preventDefault();
 
   const dados = {
-    id: generateUUID(), // Gera um ID único para o usuário
+    id: generateUUID(),
     fullName: document.getElementById('nome').value,
     emailAddress: document.getElementById('email').value,
     phoneNumber: document.getElementById('telefone').value,
-    profilePic: document.getElementById('formCadastro').dataset.profilePic, // Imagem base64
+    profilePic: document.getElementById('formCadastro').dataset.profilePic,
     school: document.getElementById('escola').value,
     address: document.getElementById('endereco').value,
     bookName: document.getElementById('nomeLivro').value,
@@ -79,27 +72,22 @@ document.getElementById('formCadastro').addEventListener('submit', function (eve
     returnBookDate: document.getElementById('dataDevolucao').value
   };
 
-  // Envia dados para o processo principal para salvar
   ipcRenderer.invoke('adicionar-usuario', dados)
     .then(response => {
       if (response.sucesso) {
         alert("Usuário cadastrado com sucesso!");
 
-        // Resetando o formulário e garantindo que os campos possam ser reutilizados
         const form = document.getElementById('formCadastro');
         form.reset();
 
-        // Limpa os campos de imagem
-        document.getElementById('photoPreview').style.display = 'none'; // Esconde a foto
-        document.getElementById('capturedPhoto').src = ''; // Limpa a imagem
-        form.dataset.profilePic = ''; // Limpa o campo de imagem
+        document.getElementById('photoPreview').style.display = 'none';
+        document.getElementById('capturedPhoto').src = '';
+        form.dataset.profilePic = '';
 
-        // Garantir que todos os campos de entrada voltem ao seu estado habilitado
         form.querySelectorAll('input, textarea').forEach(input => {
-          input.disabled = false; // Garante que todos os campos estejam habilitados
+          input.disabled = false;
         });
 
-        // Focar o primeiro campo após o reset para melhorar a experiência
         document.getElementById('nome').focus();
         return;
       } else {
@@ -109,7 +97,6 @@ document.getElementById('formCadastro').addEventListener('submit', function (eve
     .catch(console.error);
 });
 
-// Função para gerar um UUID
 function generateUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);

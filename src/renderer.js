@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
   listarUsuarios();
 });
 
-// Configura os botões de navegação entre páginas
 function setupNavigationButtons() {
   document.getElementById('go-to-cadastro')?.addEventListener('click', () => {
     ipcRenderer.send('navigate', 'cadastro.html');
@@ -30,7 +29,6 @@ function setupNavigationButtons() {
   });
 }
 
-// Configura o botão para carregar livros do Excel
 function setupLoadBooksButton() {
   const loadBooksButton = document.getElementById('loadBooks');
   if (loadBooksButton) {
@@ -40,7 +38,6 @@ function setupLoadBooksButton() {
   }
 }
 
-// Função para carregar os usuários
 function listarUsuarios() {
   const lista = document.getElementById('listaUsuarios');
   lista.innerHTML = ''; 
@@ -53,7 +50,6 @@ function listarUsuarios() {
   });
 }
 
-// Função para carregar e ler o arquivo Excel
 function loadBooksFromFile() {
   const booksDir = path.join(__dirname, '..', 'lista');
   const filePath = path.join(booksDir, 'livros.xlsx');
@@ -82,7 +78,6 @@ function loadBooksFromFile() {
   }
 }
 
-// Função para converter data do Excel para o formato DD/MM/AAAA
 function excelDateToJSDate(excelDate) {
   const baseDate = new Date(1899, 11, 31);
   const jsDate = new Date(baseDate.getTime() + excelDate * 24 * 60 * 60 * 1000);
@@ -94,10 +89,8 @@ function excelDateToJSDate(excelDate) {
   return `${day}/${month}/${year}`;
 }
 
-// Função auxiliar para tratar valores nulos
 const valorOuVazio = (valor) => valor == null ? '' : valor;
 
-// Exibe os livros da página atual
 function displayBooks(page) {
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -127,7 +120,6 @@ function displayBooks(page) {
   updatePagination();
 }
 
-// Atualiza a navegação de páginas
 function updatePagination() {
   const paginationElement = document.getElementById('pagination');
   paginationElement.innerHTML = '';

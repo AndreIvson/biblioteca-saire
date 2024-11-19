@@ -4,10 +4,13 @@
     "main": "main.js",
     "scripts": {
         "start": "electron .",
-        "dev": "nodemon main.js"
+        "dev": "nodemon main.js",
+        "pack": "electron-packager . Biblioteca-Municipal-de-Sairé --platform=win32 --arch=x64 --out=dist/ --icon=src/assets/favicon.ico"
     },
     "devDependencies": {
         "electron": "^21.0.0",
+        "electron-builder": "^25.1.8",
+        "electron-packager": "^17.1.2",
         "nodemon": "^3.0.0"
     },
     "dependencies": {
