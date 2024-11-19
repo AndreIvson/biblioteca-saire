@@ -31,24 +31,56 @@ function adicionarUsuario(dados) {
   });
 }
 
-// Função para editar um usuário
-function editarUsuario(id, dados) {
+// Função para editar usuário
+function editarUsuario(updatedUser) {
   return new Promise((resolve, reject) => {
-    const query = `UPDATE fichas SET fullName = ?, emailAddress = ?, phoneNumber = ?, profilePic = ?, school = ?, address = ?, bookName = ?, loanBookDate = ?, returnBookDate = ? WHERE id = ?`;
-    db.run(query, [dados.fullName, dados.emailAddress, dados.phoneNumber, dados.profilePic, dados.school, dados.address, dados.bookName, dados.loanBookDate, dados.returnBookDate, id], function (err) {
-      if (err) reject(err);
-      else resolve({ id, ...dados });
+    const sql = `
+      UPDATE fichas 
+      SET 
+        fullName = ?, 
+        emailAddress = ?, 
+        phoneNumber = ?, 
+        school = ?, 
+        address = ?, 
+        bookName = ?, 
+        loanBookDate = ?, 
+        returnBookDate = ? 
+      WHERE id = ?
+    `;
+    const params = [
+      updatedUser.fullName,
+      updatedUser.emailAddress,
+      updatedUser.phoneNumber,
+      updatedUser.school,
+      updatedUser.address,
+      updatedUser.bookName,
+      updatedUser.loanBookDate,
+      updatedUser.returnBookDate,
+      updatedUser.id,
+    ];
+
+    db.run(sql, params, function (err) {
+      if (err) {
+        console.error('Erro ao atualizar usuário:', err);
+        reject({ success: false, error: err.message });
+      } else {
+        resolve({ success: true });
+      }
     });
   });
 }
 
-// Função para excluir um usuário
+// Função para excluir usuário
 function excluirUsuario(id) {
   return new Promise((resolve, reject) => {
-    const query = `DELETE FROM fichas WHERE id = ?`;
-    db.run(query, [id], function (err) {
-      if (err) reject(err);
-      else resolve({ id });
+    const sql = `DELETE FROM fichas WHERE id = ?`;
+    db.run(sql, [id], function (err) {
+      if (err) {
+        console.error('Erro ao excluir usuário:', err);
+        reject({ success: false, error: err.message });
+      } else {
+        resolve({ success: true });
+      }
     });
   });
 }

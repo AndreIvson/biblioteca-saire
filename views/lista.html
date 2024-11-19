@@ -3,27 +3,56 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lista de Leitores</title>
   <link rel="stylesheet" href="../src/styles/listaStyle.css">
 </head>
 
 <body>
   <h2>Lista de Leitores</h2>
+
+  <!-- Campo de pesquisa -->
+  <div id="campoSuperior">
+    <label for="searchInput" class="pesquisaTxt">Pesquisar por nome:</label>
+    <input type="text" id="searchInput" placeholder="Digite o nome do leitor">
+    <button onclick="history.back()" class="go-back">Voltar</button>
+  </div>
   <ul id="listaUsuarios"></ul>
-  <button onclick="history.back()" class="go-back">Voltar</button>
 
   <!-- Modal para exibir detalhes do usuário -->
-
   <div id="modalcenter">
-    <!-- Overlay para o fundo escuro -->
     <div id="modalOverlay" class="modal-overlay"></div>
-
-    <!-- Modal -->
     <div id="userDetailsModal" class="modal">
       <div class="modal-content">
         <span id="closeModal" class="close">&times;</span>
         <h3>Detalhes do Leitor</h3>
-        <div id="userDetails"></div>
+        <form id="userForm">
+          <img id="userPhoto" src="" class="user-photo" alt="Foto de Perfil"><br>
+          <label><strong>Nome:</strong></label>
+          <input id="fullName" type="text" disabled><br>
+          <label><strong>Email:</strong></label>
+          <input id="emailAddress" type="email" disabled><br>
+          <label><strong>Telefone:</strong></label>
+          <input id="phoneNumber" type="text" disabled><br>
+          <label><strong>Escola:</strong></label>
+          <input id="school" type="text" disabled><br>
+          <label><strong>Endereço:</strong></label>
+          <input id="address" type="text" disabled><br>
+          <label><strong>Título do Livro:</strong></label>
+          <input id="bookName" type="text" disabled><br>
+          <label><strong>Data de Empréstimo:</strong></label>
+          <input id="loanBookDate" type="date" disabled><br>
+          <label><strong>Data de Devolução:</strong></label>
+          <input id="returnBookDate" type="date" disabled><br>
+        </form>
+        <div class="modal-buttons">
+          <button id="editSaveButton" class="edit-button">
+            <img src="../src/assets/editar.png" alt="Editar"> Editar
+          </button>
+          <button id="deleteButton" class="delete-button">
+            <img src="../src/assets/excluir.png" alt="Excluir"> Excluir
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -31,48 +60,118 @@
   <script>
     const { ipcRenderer } = require('electron');
 
+    let editMode = false;
+    let currentUserId = null;
+    let allUsuarios = [];
+
     // Função para listar os usuários
     function listarUsuarios(callback) {
       ipcRenderer.invoke('listar-usuarios').then(callback).catch(console.error);
     }
 
-    // Chama a função listarUsuarios e exibe os usuários na lista
-    listarUsuarios((usuarios) => {
-      usuarios.sort((a, b) => a.fullName.localeCompare(b.fullName));
+    // Atualiza a lista de usuários na interface
+    function atualizarListaUsuarios(usuarios) {
       const lista = document.getElementById('listaUsuarios');
+      lista.innerHTML = ''; // Limpa a lista antes de atualizar
+      usuarios.sort((a, b) => a.fullName.localeCompare(b.fullName));
       usuarios.forEach((usuario) => {
         const li = document.createElement('li');
         li.textContent = `Nome: ${usuario.fullName}, Email: ${usuario.emailAddress}`;
         li.addEventListener('click', () => mostrarDetalhesUsuario(usuario.id));
         lista.appendChild(li);
       });
-    });
+    }
 
-    // Função para mostrar detalhes do usuário em um modal
+    // Exibe os detalhes do usuário em um modal
     function mostrarDetalhesUsuario(id) {
       ipcRenderer.invoke('obter-detalhes-usuario', id).then((usuario) => {
-        const detalhes = `
-      <img src="${usuario.profilePic}" class="user-photo" alt="Foto de Perfil"><br>
-      <strong>Nome:</strong> ${usuario.fullName}<br>
-      <strong>Email:</strong> ${usuario.emailAddress}<br>
-      <strong>Telefone:</strong> ${usuario.phoneNumber}<br>
-      <strong>Escola:</strong> ${usuario.school}<br>
-      <strong>Endereço:</strong> ${usuario.address}<br>
-      <strong>Título do Livro:</strong> ${usuario.bookName}<br>
-      <strong>Data de Empréstimo:</strong> ${usuario.loanBookDate}<br>
-      <strong>Data de Devolução:</strong> ${usuario.returnBookDate}<br>
-    `;
-        document.getElementById('userDetails').innerHTML = detalhes;
+        currentUserId = id;
+        document.getElementById('userPhoto').src = usuario.profilePic || '../src/assets/default.png';
+        document.getElementById('fullName').value = usuario.fullName;
+        document.getElementById('emailAddress').value = usuario.emailAddress;
+        document.getElementById('phoneNumber').value = usuario.phoneNumber;
+        document.getElementById('school').value = usuario.school;
+        document.getElementById('address').value = usuario.address;
+        document.getElementById('bookName').value = usuario.bookName;
+        document.getElementById('loanBookDate').value = usuario.loanBookDate;
+        document.getElementById('returnBookDate').value = usuario.returnBookDate;
+
         document.getElementById('userDetailsModal').style.display = 'block';
-        document.getElementById('modalOverlay').style.display = 'block'; // Mostra o overlay
+        document.getElementById('modalOverlay').style.display = 'block';
       }).catch(console.error);
     }
 
-    // Fecha o modal de detalhes do usuário
-    document.getElementById('closeModal').addEventListener('click', () => {
-      document.getElementById('userDetailsModal').style.display = 'none';
-      document.getElementById('modalOverlay').style.display = 'none'; // Esconde o overlay
+    // Função de pesquisa
+    document.getElementById('searchInput').addEventListener('input', (event) => {
+      const searchTerm = event.target.value.toLowerCase();
+      const filteredUsuarios = allUsuarios.filter(usuario =>
+        usuario.fullName.toLowerCase().includes(searchTerm)
+      );
+      atualizarListaUsuarios(filteredUsuarios);
     });
+
+    // Inicializa a lista de usuários ao carregar a página
+    listarUsuarios((usuarios) => {
+      allUsuarios = usuarios; // Armazena todos os usuários
+      atualizarListaUsuarios(usuarios);
+    });
+
+    // Alterna entre os modos de visualização e edição
+    document.getElementById('editSaveButton').addEventListener('click', () => {
+      const fields = [
+        'fullName', 'emailAddress', 'phoneNumber', 'school',
+        'address', 'bookName', 'loanBookDate', 'returnBookDate'
+      ];
+
+      if (!editMode) {
+        editMode = true;
+        fields.forEach(field => document.getElementById(field).disabled = false);
+        document.getElementById('editSaveButton').innerHTML = '<img src="../src/assets/salvar.png" alt="Salvar"> Salvar';
+      } else {
+        editMode = false;
+        const updatedUser = fields.reduce((acc, field) => {
+          acc[field] = document.getElementById(field).value;
+          return acc;
+        }, {});
+        updatedUser.id = currentUserId;
+
+        ipcRenderer.invoke('editar-usuario', updatedUser).then((result) => {
+          if (result.success) {
+            alert('Usuário atualizado com sucesso!');
+            listarUsuarios(atualizarListaUsuarios);
+          } else {
+            alert(`Erro ao atualizar o usuário: ${result.error}`);
+          }
+        }).catch(console.error);
+
+        fields.forEach(field => document.getElementById(field).disabled = true);
+        document.getElementById('editSaveButton').innerHTML = '<img src="../src/assets/editar.png" alt="Editar"> Editar';
+      }
+    });
+
+    document.getElementById('deleteButton').addEventListener('click', () => {
+      if (confirm('Tem certeza que deseja excluir este usuário?')) {
+        ipcRenderer.invoke('excluir-usuario', currentUserId).then((result) => {
+          if (result.success) {
+            alert('Usuário excluído com sucesso!');
+            listarUsuarios(atualizarListaUsuarios);
+          } else {
+            alert(`Erro ao excluir o usuário: ${result.error}`);
+          }
+        }).catch(console.error);
+        fecharModal();
+      }
+    });
+
+    // Fecha o modal
+    function fecharModal() {
+      document.getElementById('userDetailsModal').style.display = 'none';
+      document.getElementById('modalOverlay').style.display = 'none';
+      editMode = false;
+    }
+
+    document.getElementById('closeModal').addEventListener('click', fecharModal);
+
   </script>
 </body>
 

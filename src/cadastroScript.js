@@ -63,9 +63,9 @@ document.getElementById('captureButton').addEventListener('click', () => {
 });
 
 // Ouvinte para o envio do formulário
-document.getElementById('formCadastro').addEventListener('submit', function(event) {
+document.getElementById('formCadastro').addEventListener('submit', function (event) {
   event.preventDefault();
-  
+
   const dados = {
     id: generateUUID(), // Gera um ID único para o usuário
     fullName: document.getElementById('nome').value,
@@ -101,7 +101,6 @@ document.getElementById('formCadastro').addEventListener('submit', function(even
 
         // Focar o primeiro campo após o reset para melhorar a experiência
         document.getElementById('nome').focus();
-        
         return;
       } else {
         alert("Erro ao cadastrar usuário: " + response.erro);
@@ -112,7 +111,7 @@ document.getElementById('formCadastro').addEventListener('submit', function(even
 
 // Função para gerar um UUID
 function generateUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
   });

@@ -117,7 +117,7 @@ h2 {
 .close {
   color: rgb(218, 45, 45);
   float: right;
-  font-size: 24px;
+  font-size: 30px;
   font-weight: bold;
   cursor: pointer;
   display: grid;
@@ -128,7 +128,32 @@ h2 {
   color: #555;
 }
 
-/* Botão de Voltar */
+/* Botões de ação (Editar e Excluir) */
+.edit-button,
+.delete-button {
+  height: 40px;
+  width: 100px;
+  font-size: larger;
+  border: solid 0.5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-button {
+  background-color: #ffff5e;
+}
+
+.delete-button {
+  background-color: #ff4646;
+}
+
+.edit-button img,
+.delete-button img {
+  height: 20px;
+  width: 20px;
+}
+
+/* Botão de Voltar no modal */
 .go-back {
   display: block;
   width: 100%;
@@ -144,6 +169,68 @@ h2 {
   transition: background-color 0.3s;
 }
 
+#campoSuperior {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
+.pesquisaTxt {
+  padding-left: 10%;
+}
+
+#searchLabel {
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: block;
+  color: #333;
+}
+
+#searchInput {
+  padding: 8px;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+#searchInput:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
 .go-back:hover {
   background-color: #555;
+}
+
+/* Estilo para os campos do formulário no modal */
+.modal form {
+  display: grid;
+}
+
+.modal form label {
+  font-size: 1.1em;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.modal form input[type="text"],
+.modal form input[type="email"],
+.modal form input[type="number"],
+.modal form textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Inclui padding no tamanho */
+}
+
+.modal form input[type="text"]:focus,
+.modal form input[type="email"]:focus,
+.modal form input[type="number"]:focus,
+.modal form textarea:focus {
+  border-color: #007bff;
+  outline: none;
 }

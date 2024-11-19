@@ -1,6 +1,10 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  background-image: url('../assets/brasao_opacity_10.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  background-color: #fff;
   margin: 0;
   height: 100vh;
   padding: 20px;
@@ -95,7 +99,8 @@ button:hover {
   background-color: #2980b9;
 }
 
-#camera, #capturedPhoto {
+#camera,
+#capturedPhoto {
   width: 100%;
   height: auto;
   max-height: 400px;

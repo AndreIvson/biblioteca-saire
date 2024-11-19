@@ -1,7 +1,8 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
-const { adicionarUsuario, listarUsuarios, obterDetalhesUsuario } = require('./database/database');
+const { adicionarUsuario, listarUsuarios, obterDetalhesUsuario, editarUsuario, excluirUsuario } = require('./database/database');
+const sqlite3 = require('sqlite3').verbose();
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -60,6 +61,30 @@ ipcMain.handle('adicionar-usuario', async (event, dados) => {
   } catch (error) {
     console.error('Erro ao adicionar usuário:', error);
     return { sucesso: false, erro: error.message };
+  }
+});
+
+ipcMain.handle('editar-usuario', async (event, updatedUser) => {
+  try {
+    const result = await editarUsuario(updatedUser);
+    return result; // Retorna { success: true }
+  } catch (error) {
+    console.error('Erro no IPC editar-usuario:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('excluir-usuario', async (event, userId) => {
+  try {
+    const result = await excluirUsuario(userId); // Método para deletar o usuário no banco de dados
+    if (result) {
+      return { success: true };
+    } else {
+      throw new Error('Erro ao excluir o usuário');
+    }
+  } catch (error) {
+    console.error('Erro ao excluir usuário:', error);
+    return { success: false, error: error.message };
   }
 });
 
