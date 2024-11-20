@@ -11,7 +11,10 @@
 <body>
     <div class="container">
         <h1>Lista de Livros</h1>
+        <div id="campoSuperior">
         <button id="loadBooks" class="btn-load">Carregar Livros</button>
+        <button onclick="history.back()" class="go-back">Voltar</button>
+        </div>
 
         <div class="book-list" id="bookList">
         </div>
@@ -20,8 +23,6 @@
 
     <div class="pagination" id="pagination">
     </div>
-
-    <button onclick="history.back()" class="go-back">Voltar</button>
 
     <script src="../src/renderer.js"></script>
 </body>
