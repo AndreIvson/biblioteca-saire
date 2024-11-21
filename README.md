@@ -27,6 +27,8 @@ PE, cidade onde eu resido. O sistema permite o cadastro , visualização e geren
 
 ## Fluxo da Aplicação ##
 - Tela Inicial: Ao abrir o aplicativo, o usuário é apresentado à tela inicial, onde pode navegar para a tela de cadastro de leitores, a lista de leitores cadastrados, a lista de livros e cadastro de livros.
-- Cadastro de Livros: Na tela da lista de livros, o usuário pode inserir o título, autor, editora, ano de publicação de um novo livro, entre outras informações. Após o envio, o livro será registrado no arquivo livros.xlsx.
+- Cadastro de Leitores: É possível adicionar novos leitores com informaçoes como Nome, Telefone, Escola, Foto, entre outras informações pertinentes.
+- Lista de leitores: Os leitores adicionados na aba de cadastro são exibidos em lista, podendo ser filtrados por nome, para melhorar a procura por determinado leitor, além disso, ao clicar no nome listado, é possivel observar todos os dados cadastrados à tal leitor, podendo editar e excluir.
+- Cadastro de Livros: Ao selecionar a opção de adicionar livros o app abre o arquivo xlsx onde estão sendo armazenados os livros, lá após uma simples atualização da tabela, o livro ficara disponivel na proxima atualizaçao da lista de livros.
 - Lista de Livros: A lista de livros exibe todos os livros registrados até o momento. O usuário pode visualizar os detalhes de cada livro, como título, autor, quantidade e ano de publicação.
 - Empréstimos: O sistema permite gerenciar os empréstimos de livros, registrando as datas de retirada e devolução.
