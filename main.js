@@ -7,8 +7,8 @@ const sqlite3 = require('sqlite3').verbose();
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 1280,
-    height: 960,
+    width: 1366,
+    height: 768,
     webPreferences: {
       preload: path.join(__dirname, 'renderer.js'),
       nodeIntegration: true,
@@ -18,6 +18,7 @@ function createWindow() {
 
   win.setMenu(null);
   win.loadFile(path.join(__dirname, 'views', 'index.html'));
+  win.webContents.openDevTools();
 }
 
 ipcMain.on('navigate', (event, page) => {

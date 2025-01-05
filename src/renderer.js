@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 let books = [];
-const itemsPerPage = 12;
+const itemsPerPage = 8;
 let currentPage = 1;
 let totalPages = 0;
 const maxPagesToShow = 10;
