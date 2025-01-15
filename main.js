@@ -18,7 +18,6 @@ function createWindow() {
 
   win.setMenu(null);
   win.loadFile(path.join(__dirname, 'views', 'index.html'));
-  win.webContents.openDevTools();
 }
 
 ipcMain.on('navigate', (event, page) => {
